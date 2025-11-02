@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Rock Durability System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #eef5ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4da3ff, #6eb5ff);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            background: #ff5e5e;
+            padding: 8px 15px;
+            border-radius: 5px;
+            float: right;
+            margin-top: -35px;
+            margin-right: 25px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        header a:hover {
+            background: #e04343;
+        }
+
+        .container {
+            margin: 40px auto;
+            width: 90%;
+            max-width: 900px;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h3 {
+            color: #004aad;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #d6e4ff;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f0f8ff;
+            transition: 0.2s ease;
+        }
+
+        a.action-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            color: white;
+            transition: 0.3s ease;
+        }
+
+        .approve {
+            background: #33cc66;
+        }
+
+        .approve:hover {
+            background: #2eb85c;
+        }
+
+        .reject {
+            background: #ff6666;
+        }
+
+        .reject:hover {
+            background: #ff4d4d;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .status.approved {
+            color: #2eb85c;
+        }
+
+        .status.pending {
+            color: #f39c12;
+        }
+
+        .messages {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .messages p {
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>🧑‍💼 Admin Dashboard</h2>
+        <a href="{% url 'logout_user' %}">🚪 Logout</a>
+    </header>
+
+    <div class="container">
+        <h3>📋 Registered Users</h3>
+        <table>
+            <tr>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.full_name }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.mobile }}</td>
+                <td class="status {% if u.is_approved %}approved{% else %}pending{% endif %}">
+                    {% if u.is_approved %}
+                        ✅ Approved
+                    {% else %}
+                        ⏳ Pending
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not u.is_approved %}
+                        <a href="{% url 'approve_user' u.id %}" class="action-btn approve">✅ Approve</a>
+                    {% else %}
+                        <a href="{% url 'reject_user' u.id %}" class="action-btn reject">❌ Reject</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>
